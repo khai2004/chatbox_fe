@@ -2,11 +2,16 @@ import { useSelector } from 'react-redux';
 import SearchLargeIcon from '../../../svg/SearchLarge';
 import DotsIcon from '../../../svg/Dots';
 import { capitalize } from '../../../utils/string';
+import {
+  getRecieverName,
+  getRecieverPicture,
+} from '../../../utils/chatReciever';
 
 const ChatHeader = () => {
   const { activeConversation } = useSelector((state) => state.chat);
-  const { name, picture } = activeConversation;
-
+  const { user } = useSelector((state) => state.user);
+  const name = getRecieverName(user, activeConversation.users);
+  const picture = getRecieverPicture(user, activeConversation.users);
   return (
     <div className='h-[59px] dark:bg-dark_bg_2 flex items-center px-4 select-none'>
       {/* Container */}

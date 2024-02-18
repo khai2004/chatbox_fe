@@ -3,13 +3,21 @@ import SendIcon from '../../../svg/Send';
 import Input from './Input';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSendMessageMutation } from '../../../features/messagesApiSlice';
-import { getConversations, getMessages } from '../../../features/chatSlice';
+import {
+  getConversations,
+  getMessages,
+  updateMessages,
+} from '../../../features/chatSlice';
 import { ClipLoader } from 'react-spinners';
 import EmojiPickerComponent from './EmojiPicker';
 import { Attachments } from './attachments';
+import { socket } from '../../../socket';
 
 const ChatActions = () => {
   const [message, setMessage] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showAttachment, setShowAttachment] = useState(false);
+
   const textRef = useRef();
 
   const { activeConversation, conversations } = useSelector(
@@ -31,7 +39,8 @@ const ChatActions = () => {
     try {
       if (message && activeConversation?._id) {
         const res = await sendMessage(data);
-        dispatch(getMessages([res.data]));
+        socket.emit('send message', res.data);
+        dispatch(updateMessages([res.data]));
         const newConver = conversations.map((c) => {
           if (c._id === activeConversation._id) {
             return { ...c, latestMessage: res.data };
@@ -40,7 +49,6 @@ const ChatActions = () => {
         });
 
         dispatch(getConversations(newConver));
-
         setMessage('');
       }
     } catch (error) {
@@ -60,8 +68,15 @@ const ChatActions = () => {
             message={message}
             setMessage={setMessage}
             textRef={textRef}
+            showEmojiPicker={showEmojiPicker}
+            setShowEmojiPicker={setShowEmojiPicker}
+            setShowAttachment={setShowAttachment}
           />
-          <Attachments />
+          <Attachments
+            showAttachment={showAttachment}
+            setShowAttachment={setShowAttachment}
+            setShowEmojiPicker={setShowEmojiPicker}
+          />
         </ul>
         {/* Input */}
         <Input message={message} setMessage={setMessage} textRef={textRef} />

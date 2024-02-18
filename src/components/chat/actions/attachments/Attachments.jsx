@@ -2,19 +2,22 @@ import { useState } from 'react';
 import { AttachmentIcon } from '../../../../svg';
 import Menu from './Menu';
 
-const Attachments = () => {
-  const [show, setShow] = useState(false);
+const Attachments = ({
+  showAttachment,
+  setShowAttachment,
+  setShowEmojiPicker,
+}) => {
+  const handelOpenAttachment = () => {
+    setShowAttachment((pre) => !pre);
+    setShowEmojiPicker(false);
+  };
   return (
     <li>
-      <button
-        className='btn'
-        type='button'
-        onClick={() => setShow((pre) => !pre)}
-      >
+      <button className='btn' type='button' onClick={handelOpenAttachment}>
         <AttachmentIcon className='dark:fill-dark_svg_1' />
       </button>
       {/* Menu */}
-      {show && <Menu />}
+      {showAttachment && <Menu />}
     </li>
   );
 };
