@@ -26,9 +26,23 @@ import CallIcon from './Call';
 import MuteIcon from './Mute';
 import NoVideoIcon from './NoVideo';
 import TriangleIcon from './triangle';
+import DownloadIcon from './Download';
+import ValidIcon from './Valid';
+import AddContactIcon from './AddContact';
+import SpeakerIcon from './Speaker';
+import VideoDialIcon from './VideoDial';
+import DialIcon from './Dial';
+import VideoCallIcon from './VideoCall';
 export {
+  ValidIcon,
+  DialIcon,
+  VideoCallIcon,
+  VideoDialIcon,
+  SpeakerIcon,
+  AddContactIcon,
   CommunityIcon,
   TriangleIcon,
+  DownloadIcon,
   StoryIcon,
   ChatIcon,
   NotificationIcon,

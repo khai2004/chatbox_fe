@@ -7,19 +7,22 @@ import { getMessages } from '../../features/chatSlice';
 import { ChatHeader } from './header';
 import { ChatMessages } from './messages';
 import { ChatActions } from './actions';
+import { checkOnlineStatus } from '../../utils/chatReciever';
+import FilesPreview from './preview/files/FilesPreview';
 
-const ChatContainer = () => {
+const ChatContainer = ({ typing, callUser, onlineUsers }) => {
   const dispatch = useDispatch();
-  const { activeConversation } = useSelector((state) => state.chat);
+  const { activeConversation, files } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
   const { data, error, isLoading } = useGetMessagesQuery(
     { converId: activeConversation._id, token: user.token },
     { skip: !activeConversation?._id || !user.token }
   );
-
+  console.log(activeConversation);
   useEffect(() => {
     if (data) {
       dispatch(getMessages(data));
+      console.log(data);
     }
   }, [data, dispatch]);
   return (
@@ -27,11 +30,25 @@ const ChatContainer = () => {
       {/* Container */}
       <div>
         {/* Chat header */}
-        <ChatHeader />
+        <ChatHeader
+          callUser={callUser}
+          online={
+            activeConversation.isGroup
+              ? false
+              : checkOnlineStatus(onlineUsers, user, activeConversation.users)
+          }
+        />
         {/* Chat messages */}
-        <ChatMessages />
-        {/* Chat actions */}
-        <ChatActions />
+
+        {files.length > 0 ? (
+          <FilesPreview />
+        ) : (
+          <>
+            <ChatMessages typing={typing} />
+            {/* Chat actions */}
+            <ChatActions />
+          </>
+        )}
       </div>
     </div>
   );

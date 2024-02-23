@@ -22,7 +22,17 @@ export const chatApiSlice = apiSlice.injectEndpoints({
         headers: {
           authorization: `Bearer ${data.token}`,
         },
-        body: { receiver_id: data.receiver_id },
+        body: { receiver_id: data.receiver_id, isGroup: data.isGroup },
+      }),
+    }),
+    createGroup: builder.mutation({
+      query: (data) => ({
+        url: '/conversation/group',
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${data.token}`,
+        },
+        body: { name: data.name, users: data.users },
       }),
     }),
   }),
@@ -31,4 +41,5 @@ export const chatApiSlice = apiSlice.injectEndpoints({
 export const {
   useCreate_open_conversationsMutation,
   useGetConversationsQuery,
+  useCreateGroupMutation,
 } = chatApiSlice;

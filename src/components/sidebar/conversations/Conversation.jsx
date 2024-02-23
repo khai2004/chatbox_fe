@@ -12,12 +12,17 @@ import {
 } from '../../../features/chatSlice';
 import { capitalize } from '../../../utils/string';
 import { socket } from '../../../socket';
+import { useEffect } from 'react';
+import { BeatLoader } from 'react-spinners';
 
-const Conversation = ({ conver }) => {
+const Conversation = ({ conver, online, typing }) => {
   //data
   const { user } = useSelector((state) => state.user);
-  const recieverId = getRecieverId(user, conver.users);
-  const data = { receiver_id: recieverId, token: user.token };
+  const data = {
+    receiver_id: getRecieverId(user, conver.users),
+    isGroup: conver.isGroup ? conver._id : false,
+    token: user.token,
+  };
   const { activeConversation, conversations } = useSelector(
     (state) => state.chat
   );
@@ -53,9 +58,17 @@ const Conversation = ({ conver }) => {
         {/* Left */}
         <div className='flex items-center gap-x-3'>
           {/* Conversation user picture */}
-          <div className='relative min-w-[50px] max-w-[50px]  h-[50px] rounded-full overflow-hidden'>
+          <div
+            className={`relative min-w-[50px] max-w-[50px] h-[50px] rounded-full overflow-hidden ${
+              online ? 'online' : ''
+            }`}
+          >
             <img
-              src={getRecieverPicture(user, conver.users)}
+              src={
+                conver.isGroup
+                  ? conver.picture
+                  : getRecieverPicture(user, conver.users)
+              }
               alt={conver.name}
               className='w-full h-full object-cover'
             />
@@ -64,17 +77,25 @@ const Conversation = ({ conver }) => {
           <div className='w-full flex flex-col'>
             {/* Conversation name */}
             <h1 className='font-bold flex items-center gap-x-2'>
-              {capitalize(getRecieverName(user, conver.users))}
+              {capitalize(
+                conver.isGroup
+                  ? conver.name
+                  : getRecieverName(user, conver.users)
+              )}
             </h1>
             {/* Conversation message */}
             <div>
               <div className='flex items-center gap-x-1 dark:text-dark_text_2'>
                 <div className='flex-1 items-center gap-x-1 dark:text-dark_text_2'>
-                  <p>
-                    {conver.latestMessage?.message.length > 25
-                      ? `${conver.latestMessage?.message.substring(0, 25)}...`
-                      : conver.latestMessage?.message}
-                  </p>
+                  {typing === conver._id ? (
+                    <BeatLoader color='#4ade80' size={12} />
+                  ) : (
+                    <p>
+                      {conver.latestMessage?.message.length > 25
+                        ? `${conver.latestMessage?.message.substring(0, 25)}...`
+                        : conver.latestMessage?.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

@@ -5,6 +5,7 @@ const initialState = {
   activeConversation: {},
   notifications: [],
   messages: [],
+  files: [],
 };
 
 export const chatSlice = createSlice({
@@ -23,6 +24,18 @@ export const chatSlice = createSlice({
     updateMessages: (state, action) => {
       state.messages = [...state.messages, ...action.payload];
     },
+    addFiles: (state, action) => {
+      state.files = [action.payload, ...state.files];
+    },
+    clearFiles: (state, action) => {
+      state.files = [];
+    },
+    removeFile: (state, action) => {
+      let index = action.payload;
+      let files = [...state.files];
+      let fileToRemove = [files[index]];
+      state.files = files.filter((file) => !fileToRemove.includes(file));
+    },
   },
 });
 
@@ -31,5 +44,8 @@ export const {
   getConversations,
   getMessages,
   updateMessages,
+  addFiles,
+  clearFiles,
+  removeFile,
 } = chatSlice.actions;
 export default chatSlice.reducer;

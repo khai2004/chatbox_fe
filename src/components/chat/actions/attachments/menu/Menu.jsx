@@ -2,10 +2,10 @@ import {
   CameraIcon,
   ContactIcon,
   DocumentIcon,
-  PhotoIcon,
   PollIcon,
-  StickerIcon,
-} from '../../../../svg';
+} from '../../../../../svg';
+import DocumentAttachment from './DocumentAttachment';
+import PhotoAttachment from './PhotoAttachment';
 
 function Menu() {
   return (
@@ -30,16 +30,8 @@ function Menu() {
           <CameraIcon />
         </button>
       </li>
-      <li>
-        <button type='button' className='rounded-full'>
-          <StickerIcon />
-        </button>
-      </li>
-      <li>
-        <button type='button' className='bg-orange-400 rounded-full'>
-          <PhotoIcon />
-        </button>
-      </li>
+      <DocumentAttachment />
+      <PhotoAttachment />
     </ul>
   );
 }
